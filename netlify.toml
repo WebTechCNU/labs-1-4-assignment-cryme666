@@ -1,2 +1,24 @@
 [build]
-functions = "functions"
+  command = "npm install"
+  publish = "functions"
+  functions = "functions"
+
+[[redirects]]
+  from = "/projects"
+  to = "/.netlify/functions/projects"
+  status = 200
+
+[[redirects]]
+  from = "/projects/*"
+  to = "/.netlify/functions/projects/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/tasks"
+  to = "/.netlify/functions/tasks"
+  status = 200
+
+[[redirects]]
+  from = "/tasks/*"
+  to = "/.netlify/functions/tasks/:splat"
+  status = 200
