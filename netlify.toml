@@ -22,3 +22,8 @@
   from = "/tasks/*"
   to = "/.netlify/functions/tasks/:splat"
   status = 200
+
+[[redirects]]
+  from = "/graphql"
+  to = "/.netlify/functions/graphql"
+  status = 200

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getProjects } from "./api/client.js";
+import { getProjects } from "./api/graphqlClient.js";
 import ProjectsPanel from "./components/ProjectsPanel.jsx";
 import TasksPanel from "./components/TasksPanel.jsx";
 import Toast from "./components/Toast.jsx";
@@ -33,7 +33,7 @@ export default function App() {
       <header className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-6 text-white shadow-lg">
         <h1 className="text-2xl font-bold">Task Manager</h1>
         <p className="mt-1 text-blue-100">
-          React + Tailwind frontend for projects and tasks REST API
+          React + Tailwind frontend with GraphQL API
         </p>
       </header>
 

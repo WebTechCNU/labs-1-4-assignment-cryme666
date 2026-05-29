@@ -5,7 +5,7 @@ import {
   getTask,
   getTasks,
   updateTask,
-} from "../api/client.js";
+} from "../api/graphqlClient.js";
 import { useDebounce } from "../hooks/useDebounce.js";
 import Badge from "./Badge.jsx";
 import Pagination from "./Pagination.jsx";

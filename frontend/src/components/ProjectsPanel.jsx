@@ -5,7 +5,7 @@ import {
   getProject,
   getProjects,
   updateProject,
-} from "../api/client.js";
+} from "../api/graphqlClient.js";
 import { useDebounce } from "../hooks/useDebounce.js";
 import Pagination from "./Pagination.jsx";
 
