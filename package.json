@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "netlify dev",
-    "start": "netlify dev",
+    "dev:api": "node server.js",
+    "start": "node server.js",
     "dev:frontend": "npm --prefix frontend run dev",
     "build:frontend": "npm --prefix frontend run build",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb": "^6.13.0"
