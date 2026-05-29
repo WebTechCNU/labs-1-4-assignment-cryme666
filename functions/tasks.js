@@ -3,6 +3,7 @@ require("dotenv").config();
 const { ObjectId } = require("mongodb");
 const connectDB = require("./db");
 const { success, error, handleOptions } = require("./utils/response");
+const { requireAuthFromEvent } = require("./utils/auth");
 const {
   isValidObjectId,
   parsePagination,
@@ -167,6 +168,11 @@ exports.handler = async (event) => {
   try {
     const id = extractIdFromPath(event);
     const method = event.httpMethod;
+    const writeMethods = ["POST", "PUT", "DELETE"];
+
+    if (writeMethods.includes(method)) {
+      requireAuthFromEvent(event);
+    }
 
     if (method === "GET" && !id) {
       return await listTasks(event);

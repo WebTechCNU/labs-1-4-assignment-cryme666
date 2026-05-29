@@ -8,6 +8,11 @@ const { GraphQLError } = require("graphql");
 const { ObjectId } = require("mongodb");
 const connectDB = require("./db");
 const {
+  extractTokenFromRequest,
+  verifyToken,
+  assertAuthenticated,
+} = require("./utils/auth");
+const {
   isValidObjectId,
   parsePagination,
   parseSort,
@@ -279,8 +284,9 @@ const resolvers = {
   },
 
   Mutation: {
-    createProject: async (_, { name, description }) => {
+    createProject: async (_, { name, description }, context) => {
       try {
+        assertAuthenticated(context);
         const collection = await connectDB("projects");
         const data = validateProjectBody({ name, description });
         const now = new Date();
@@ -293,8 +299,9 @@ const resolvers = {
       }
     },
 
-    updateProject: async (_, { id, name, description }) => {
+    updateProject: async (_, { id, name, description }, context) => {
       try {
+        assertAuthenticated(context);
         assertValidId(id);
         const collection = await connectDB("projects");
         const data = validateProjectBody({ name, description }, true);
@@ -316,8 +323,9 @@ const resolvers = {
       }
     },
 
-    deleteProject: async (_, { id }) => {
+    deleteProject: async (_, { id }, context) => {
       try {
+        assertAuthenticated(context);
         assertValidId(id);
         const collection = await connectDB("projects");
         const tasksCollection = await connectDB("tasks");
@@ -339,8 +347,9 @@ const resolvers = {
       }
     },
 
-    createTask: async (_, args) => {
+    createTask: async (_, args, context) => {
       try {
+        assertAuthenticated(context);
         const collection = await connectDB("tasks");
         const projectsCollection = await connectDB("projects");
         const data = validateTaskBody(args);
@@ -358,8 +367,9 @@ const resolvers = {
       }
     },
 
-    updateTask: async (_, { id, ...fields }) => {
+    updateTask: async (_, { id, ...fields }, context) => {
       try {
+        assertAuthenticated(context);
         assertValidId(id);
         const collection = await connectDB("tasks");
         const projectsCollection = await connectDB("projects");
@@ -389,8 +399,9 @@ const resolvers = {
       }
     },
 
-    deleteTask: async (_, { id }) => {
+    deleteTask: async (_, { id }, context) => {
       try {
+        assertAuthenticated(context);
         assertValidId(id);
         const collection = await connectDB("tasks");
         const result = await collection.deleteOne({ _id: new ObjectId(id) });
@@ -411,7 +422,18 @@ app.use(cors());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ req }),
+  context: ({ req }) => {
+    const token = extractTokenFromRequest(req);
+    let user = null;
+    if (token) {
+      try {
+        user = verifyToken(token);
+      } catch {
+        user = null;
+      }
+    }
+    return { req, user, token };
+  },
 });
 
 let handler;
